@@ -1,3 +1,5 @@
+/* eslint no-unused-vars: "off" */
+
 var promisify = require("promisify-node");
 var rawApi;
 
@@ -17,7 +19,6 @@ catch (ex) {
 
 // Native methods do not return an identifiable function, so we
 // have to override them here
-/* jshint ignore:start */
 {% each . as idef %}
   {% if idef.type != "enum" %}
 
@@ -34,14 +35,18 @@ catch (ex) {
           var _{{ idef.jsClassName }}_{{ fn.jsFunctionName}}
             = _{{ idef.jsClassName }}.prototype.{{ fn.jsFunctionName }};
           _{{ idef.jsClassName }}.prototype.{{ fn.jsFunctionName }}
-            = promisify(_{{ idef.jsClassName }}_{{ fn.jsFunctionName}});
+            = promisify(
+              _{{ idef.jsClassName }}_{{ fn.jsFunctionName}}
+            );
 
         {% else %}
 
           var _{{ idef.jsClassName }}_{{ fn.jsFunctionName}}
             = _{{ idef.jsClassName }}.{{ fn.jsFunctionName }};
           _{{ idef.jsClassName }}.{{ fn.jsFunctionName }}
-            = promisify(_{{ idef.jsClassName }}_{{ fn.jsFunctionName}});
+            = promisify(
+              _{{ idef.jsClassName }}_{{ fn.jsFunctionName}}
+            );
 
         {% endif %}
 
@@ -66,10 +71,9 @@ _FilterRegistry.register = promisify(_FilterRegistry_register);
 var _FilterRegistry_unregister = _FilterRegistry.unregister;
 _FilterRegistry.unregister = promisify(_FilterRegistry_unregister);
 
-/* jshint ignore:end */
 
 // Set the exports prototype to the raw API.
-exports.__proto__ = rawApi;
+Object.setPrototypeOf(exports, rawApi)
 
 var importExtension = function(name) {
   try {
@@ -101,15 +105,16 @@ importExtension("filter_registry");
     importExtension("{{ filename }}");
   {% endif %}
 {% endeach %}
-/* jshint ignore:start */
 {% each . as idef %}
   {% if idef.type != "enum" %}
     {% each idef.functions as fn %}
       {% if fn.useAsOnRootProto %}
 
         // Inherit directly from the original {{idef.jsClassName}} object.
-        _{{ idef.jsClassName }}.{{ fn.jsFunctionName }}.__proto__ =
-          _{{ idef.jsClassName }};
+        Object.setPrototypeOf(
+          _{{ idef.jsClassName }}.{{ fn.jsFunctionName }},
+          _{{ idef.jsClassName }}
+        );
 
         // Ensure we're using the correct prototype.
         _{{ idef.jsClassName }}.{{ fn.jsFunctionName }}.prototype =
@@ -123,7 +128,6 @@ importExtension("filter_registry");
     {% endeach %}
   {% endif %}
 {% endeach %}
-/* jshint ignore:end */
 
 // Wrap asynchronous methods to return promises.
 promisify(exports);
