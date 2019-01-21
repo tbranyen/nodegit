@@ -753,7 +753,7 @@
       [
         "git_off_t",
         {
-          "type": "enum"
+          "type": "size_t"
         }
       ],
       [
@@ -884,7 +884,7 @@
       [
         "git_time_t",
         {
-          "type": "enum"
+          "type": "size_t"
         }
       ],
       [
