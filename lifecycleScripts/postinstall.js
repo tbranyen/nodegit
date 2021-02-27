@@ -1,21 +1,19 @@
-var fse = require("fs-extra");
-var path = require("path");
+var fse = require('fs-extra');
+var path = require('path');
 
-var exec = require("../utils/execPromise");
-var buildFlags = require("../utils/buildFlags");
+var exec = require('../utils/execPromise');
+var buildFlags = require('../utils/buildFlags');
 
-var rootPath = path.join(__dirname, "..");
+var rootPath = path.join(__dirname, '..');
 
 function printStandardLibError() {
-  console.log(
-    "[nodegit] ERROR - the latest libstdc++ is missing on your system!"
-  );
-  console.log("");
-  console.log("On Ubuntu you can install it using:");
-  console.log("");
-  console.log("$ sudo add-apt-repository ppa:ubuntu-toolchain-r/test");
-  console.log("$ sudo apt-get update");
-  console.log("$ sudo apt-get install libstdc++-4.9-dev");
+  console.log('[nodegit] ERROR - the latest libstdc++ is missing on your system!');
+  console.log('');
+  console.log('On Ubuntu you can install it using:');
+  console.log('');
+  console.log('$ sudo add-apt-repository ppa:ubuntu-toolchain-r/test');
+  console.log('$ sudo apt-get update');
+  console.log('$ sudo apt-get install libstdc++-4.9-dev');
 }
 
 module.exports = function install() {
@@ -30,22 +28,18 @@ module.exports = function install() {
     return Promise.resolve();
   }
 
-  return exec("node \"" + path.join(rootPath, "dist/nodegit.js\""))
-    .catch(function(e) {
-      if (~e.toString().indexOf("Module version mismatch")) {
+  return exec('node "' + path.join(rootPath, 'dist/nodegit.js"'))
+    .catch(function (e) {
+      if (~e.toString().indexOf('Module version mismatch')) {
+        console.warn('[nodegit] WARN - NodeGit was built for a different version of node.');
         console.warn(
-          "[nodegit] WARN - NodeGit was built for a different version of node."
+          'If you are building NodeGit for electron/nwjs you can ' + 'ignore this warning.'
         );
-        console.warn(
-          "If you are building NodeGit for electron/nwjs you can " +
-          "ignore this warning."
-        );
-      }
-      else {
+      } else {
         throw e;
       }
     })
-    .then(function() {
+    .then(function () {
       // Is we're using NodeGit from a package manager then let's clean up after
       // ourselves when we install successfully.
       if (!buildFlags.mustBuild) {
@@ -58,26 +52,21 @@ module.exports = function install() {
         // fse.removeSync(path.join(rootPath, "src"));
         // fse.removeSync(path.join(rootPath, "include"));
 
-        fse.removeSync(path.join(rootPath, "build/Release/*.a"));
-        fse.removeSync(path.join(rootPath, "build/Release/obj.target"));
+        fse.removeSync(path.join(rootPath, 'build/Release/*.a'));
+        fse.removeSync(path.join(rootPath, 'build/Release/obj.target'));
       }
     });
 };
 
 // Called on the command line
 if (require.main === module) {
-  module.exports()
-    .catch(function(e) {
-      console.warn("[nodegit] WARN - Could not finish postinstall");
+  module.exports().catch(function (e) {
+    console.warn('[nodegit] WARN - Could not finish postinstall');
 
-      if (
-        process.platform === "linux" &&
-        ~e.toString().indexOf("libstdc++")
-      ) {
-        printStandardLibError();
-      }
-      else {
-        console.log(e);
-      }
-    });
+    if (process.platform === 'linux' && ~e.toString().indexOf('libstdc++')) {
+      printStandardLibError();
+    } else {
+      console.log(e);
+    }
+  });
 }

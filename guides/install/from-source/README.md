@@ -7,14 +7,13 @@ description: How to build NodeGit from source
 
 [Return to all guides](../../)
 
-* * *
+---
 
-Building from source
---------------------
+## Building from source
 
 If you wish to help contribute to NodeGit it is useful to build locally.
 
-``` bash
+```bash
 # Fetch this project.
 git clone git://github.com/nodegit/nodegit.git
 
@@ -27,29 +26,29 @@ npm install
 
 If you encounter errors, you most likely have not configured the dependencies correctly.
 
-### Installing dependencies: ###
+### Installing dependencies:
 
-#### <a name="osx"></a> Mac OS X ####
+#### <a name="osx"></a> Mac OS X
 
 - [Install XCode Command Line Tools](http://railsapps.github.io/xcode-command-line-tools.html)
 
-#### <a name="linux"></a>Linux ####
+#### <a name="linux"></a>Linux
 
 Using APT in Ubuntu:
 
-``` bash
+```bash
 sudo apt-get install build-essential
 ```
 
 Using Pacman in Arch Linux:
 
-``` bash
+```bash
 sudo pacman -S base-devel
 ```
 
 Note that GCC/G++ 4.7+ are required, as the library makes use of some c++11 std calls.
 
-#### <a name="windows"></a>Windows ####
+#### <a name="windows"></a>Windows
 
 - [Download and install Python 2](https://www.python.org/download/windows).
 - [Download and install VS Community](https://www.visualstudio.com/products/visual-studio-community-vs).
@@ -57,14 +56,15 @@ Note that GCC/G++ 4.7+ are required, as the library makes use of some c++11 std 
 You may have to add a build flag to the installation process to successfully install.
 Try first without, if the build fails, try again with the flag.
 
-*Allegedly the order in which you install Visual Studio could trigger this error.*
+_Allegedly the order in which you install Visual Studio could trigger this error._
 
-``` bash
+```bash
 npm install nodegit --msvs_version=2013
 # Or whatever version you've installed.
 ```
 
-##### A note on environment variables in Windows #####
+##### A note on environment variables in Windows
+
 In many of the npm scripts (and examples above), things are run like
 `BUILD_ONLY=true npm install`. This sets the `BUILD_ONLY` environment variable
 to true for the duration of that command. This doesn't work in windows, however
@@ -74,7 +74,7 @@ So for the above example, you would run `cmd /C "set BUILD_ONLY=true && npm inst
 See here for more details:
 [SuperUser](http://superuser.com/questions/223104/setting-environment-variable-for-just-one-command-in-windows-cmd-exe).
 
-### <a name="debug-build"></a>Debug build: ###
+### <a name="debug-build"></a>Debug build:
 
 In order to track down possible bugs, you will need a debug build so you
 can get a backtrace with [gdb](http://www.gnu.org/software/gdb/) or

@@ -1,15 +1,15 @@
-const path = require("path");
-const utils = require("./utils");
+const path = require('path');
+const utils = require('./utils');
 
-const testFilesPath = "../test/tests";
-const missingFileIgnores = require("../input/ignored-missing-tests");
+const testFilesPath = '../test/tests';
+const missingFileIgnores = require('../input/ignored-missing-tests');
 
 module.exports = function generateMissingTests() {
   var output = {};
 
   function findMissingTest(idef) {
-    return new Promise(function(resolve) {
-      var testFilePath = path.join(testFilesPath, idef.filename + ".js");
+    return new Promise(function (resolve) {
+      var testFilePath = path.join(testFilesPath, idef.filename + '.js');
       var result = {};
 
       var file = utils.readLocalFile(testFilePath);
@@ -21,27 +21,30 @@ module.exports = function generateMissingTests() {
 
         fieldIgnores = fieldIgnores || [];
         functionIgnores = functionIgnores || [];
-        file = file || "";
+        file = file || '';
 
-        idef.fields.forEach(function(field) {
-          if (file.indexOf(field.jsFunctionName) < 0
-            && fieldIgnores.indexOf(field.jsFunctionName < 0)) {
-                fieldsResult.push(field.jsFunctionName);
-              }
+        idef.fields.forEach(function (field) {
+          if (
+            file.indexOf(field.jsFunctionName) < 0 &&
+            fieldIgnores.indexOf(field.jsFunctionName < 0)
+          ) {
+            fieldsResult.push(field.jsFunctionName);
+          }
         });
 
         result.fields = fieldsResult;
 
-        idef.functions.forEach(function(fn) {
-          if (file.indexOf(fn.jsFunctionName) < 0
-            && functionIgnores.indexOf(fn.jsFunctionName) < 0) {
-                functionsResult.push(fn.jsFunctionName);
-              }
+        idef.functions.forEach(function (fn) {
+          if (
+            file.indexOf(fn.jsFunctionName) < 0 &&
+            functionIgnores.indexOf(fn.jsFunctionName) < 0
+          ) {
+            functionsResult.push(fn.jsFunctionName);
+          }
         });
 
         result.functions = functionsResult;
-      }
-      else {
+      } else {
         result.testFileMissing = false;
         result.testFilePath = testFilePath;
       }
@@ -49,22 +52,21 @@ module.exports = function generateMissingTests() {
       output[idef.filename] = result;
       resolve();
     });
-  };
+  }
 
-  const idefs = require("../output/idefs");
-  var promises = idefs.map(function(idef) {
+  const idefs = require('../output/idefs');
+  var promises = idefs.map(function (idef) {
     return findMissingTest(idef);
   });
 
   Promise.all(promises).then(
-    function() {
-      utils.writeLocalFile("/output/missing-tests.json", output);
+    function () {
+      utils.writeLocalFile('/output/missing-tests.json', output);
     },
-    function(fail) {
+    function (fail) {
       console.error(fail);
     }
   );
-
 };
 
 if (require.main === module) {

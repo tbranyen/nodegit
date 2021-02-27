@@ -1,5 +1,5 @@
-var nodegit = require("../");
-var path = require("path");
+var nodegit = require('../');
+var path = require('path');
 var oid;
 var odb;
 var repo;
@@ -19,10 +19,10 @@ var repo;
 // Nearly, all git operations in the context of a repository.
 // To open a repository,
 
-nodegit.Repository.open(path.resolve(__dirname, "../.git"))
-  .then(function(repoResult) {
+nodegit.Repository.open(path.resolve(__dirname, '../.git'))
+  .then(function (repoResult) {
     repo = repoResult;
-    console.log("Opened repository.");
+    console.log('Opened repository.');
 
     // ### SHA-1 Value Conversions
 
@@ -30,7 +30,7 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     // **nodegit** uses a simple wrapper around hash values called an `Oid`.
     // The oid validates that the SHA is well-formed.
 
-    oid = nodegit.Oid.fromString("c27d9c35e3715539d941254f2ce57042b978c49c");
+    oid = nodegit.Oid.fromString('c27d9c35e3715539d941254f2ce57042b978c49c');
 
     // Most functions in in **nodegit** that take an oid will also take a
     // string, so for example, you can look up a commit by a string SHA or
@@ -38,7 +38,7 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     // an Oid.
 
     // If you have a oid, you can easily get the hex value of the SHA again.
-    console.log("Sha hex string:", oid.toString());
+    console.log('Sha hex string:', oid.toString());
 
     // ### Working with the Object Database
 
@@ -49,7 +49,7 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     return repo.odb();
   })
 
-  .then(function(odbResult) {
+  .then(function (odbResult) {
     odb = odbResult;
 
     // We can read raw objects directly from the object database if we have
@@ -59,7 +59,7 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     return odb.read(oid);
   })
 
-  .then(function(object) {
+  .then(function (object) {
     // A raw object only has three properties - the type (commit, blob, tree
     // or tag), the size of the raw data and the raw, unparsed data itself.
     // For a commit or tag, that raw data is human readable plain ASCII
@@ -70,26 +70,25 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     var type = object.type();
     var size = object.size();
 
-    console.log("Object size and type:", size, type);
-    console.log("Raw data: ", data.toString().substring(100), "...");
-
+    console.log('Object size and type:', size, type);
+    console.log('Raw data: ', data.toString().substring(100), '...');
   })
 
-  .then(function() {
+  .then(function () {
     // You can also write raw object data to Git. This is pretty cool because
     // it gives you direct access to the key/value properties of Git. Here
     // we'll write a new blob object that just contains a simple string.
     // Notice that we have to specify the object type.
-    return odb.write("test data", "test data".length, nodegit.Object.TYPE.BLOB);
+    return odb.write('test data', 'test data'.length, nodegit.Object.TYPE.BLOB);
   })
 
-  .then(function(oid) {
+  .then(function (oid) {
     // Now that we've written the object, we can check out what SHA1 was
     // generated when the object was written to our database.
-    console.log("Written Object: ", oid.toString());
+    console.log('Written Object: ', oid.toString());
   })
 
-  .then(function() {
+  .then(function () {
     // ### Object Parsing
 
     // libgit2 has methods to parse every object type in Git so you don't have
@@ -102,7 +101,7 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     // data in the commit - the author (name, email, datetime), committer
     // (same), tree, message, encoding and parent(s).
 
-    oid = nodegit.Oid.fromString("698c74e817243efe441a5d1f3cbaf3998282ca86");
+    oid = nodegit.Oid.fromString('698c74e817243efe441a5d1f3cbaf3998282ca86');
 
     // Many methods in **nodegit** are asynchronous, because they do file
     // or network I/O. By convention, all asynchronous methods are named
@@ -112,13 +111,12 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     return repo.getCommit(oid);
   })
 
-  .then(function(commit) {
+  .then(function (commit) {
     // Each of the properties of the commit object are accessible via methods,
     // including commonly needed variations, such as `git_commit_time` which
     // returns the author time and `git_commit_message` which gives you the
     // commit message.
-    console.log("Commit:", commit.message(),
-      commit.author().name(), commit.date());
+    console.log('Commit:', commit.message(), commit.author().name(), commit.date());
 
     // Commits can have zero or more parents. The first (root) commit will
     // have no parents, most commits will have one (i.e. the commit it was
@@ -127,60 +125,60 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     return commit.getParents();
   })
 
-  .then(function(parents) {
-    parents.forEach(function(parent) {
-      console.log("Parent:", parent.toString());
+  .then(function (parents) {
+    parents.forEach(function (parent) {
+      console.log('Parent:', parent.toString());
     });
   })
 
-  .then(function() {
+  .then(function () {
     // #### Writing Commits
 
     // nodegit provides a couple of methods to create commit objects easily as
     // well.
-    var author = nodegit.Signature.now("Scott Chacon",
-      "schacon@gmail.com");
-    var committer = nodegit.Signature.now("Scott A Chacon",
-      "scott@github.com");
+    var author = nodegit.Signature.now('Scott Chacon', 'schacon@gmail.com');
+    var committer = nodegit.Signature.now('Scott A Chacon', 'scott@github.com');
 
     // Commit objects need a tree to point to and optionally one or more
     // parents. Here we're creating oid objects to create the commit with,
     // but you can also use existing ones:
-    var treeId = nodegit.Oid.fromString(
-      "4170d10f19600b9cb086504e8e05fe7d863358a2");
-    var parentId = nodegit.Oid.fromString(
-      "eebd0ead15d62eaf0ba276da53af43bbc3ce43ab");
+    var treeId = nodegit.Oid.fromString('4170d10f19600b9cb086504e8e05fe7d863358a2');
+    var parentId = nodegit.Oid.fromString('eebd0ead15d62eaf0ba276da53af43bbc3ce43ab');
 
-    return repo.getTree(treeId).then(function(tree) {
-      return repo.getCommit(parentId).then(function(parent) {
-        // Here we actually create the commit object with a single call with all
-        // the values we need to create the commit. The SHA key is written to
-        // the `commit_id` variable here.
-        return repo.createCommit(
-          null /* do not update the HEAD */,
-          author,
-          committer,
-          "example commit",
-          tree,
-          [parent]);
-      }).then(function(oid) {
-        console.log("New Commit:", oid.toString());
-      });
+    return repo.getTree(treeId).then(function (tree) {
+      return repo
+        .getCommit(parentId)
+        .then(function (parent) {
+          // Here we actually create the commit object with a single call with all
+          // the values we need to create the commit. The SHA key is written to
+          // the `commit_id` variable here.
+          return repo.createCommit(
+            null /* do not update the HEAD */,
+            author,
+            committer,
+            'example commit',
+            tree,
+            [parent]
+          );
+        })
+        .then(function (oid) {
+          console.log('New Commit:', oid.toString());
+        });
     });
   })
 
-  .then(function() {
+  .then(function () {
     // #### Tag Parsing
 
     // You can parse and create tags with the [tag management API][tm], which
     // functions very similarly to the commit lookup, parsing and creation
     // methods, since the objects themselves are very similar.
 
-    oid = nodegit.Oid.fromString("dcc4aa9fcdaced037434cb149ed3b6eab4d0709d");
+    oid = nodegit.Oid.fromString('dcc4aa9fcdaced037434cb149ed3b6eab4d0709d');
     return repo.getTag(oid);
   })
 
-  .then(function(tag) {
+  .then(function (tag) {
     // Now that we have the tag object, we can extract the information it
     // generally contains: the target (usually a commit object), the type of
     // the target object (usually "commit"), the name ("v1.0"), the tagger (a
@@ -191,10 +189,10 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
   })
 
   .then(function (target) {
-    console.log("Target is commit:", target.isCommit());
+    console.log('Target is commit:', target.isCommit());
   })
 
-  .then(function() {
+  .then(function () {
     // #### Tree Parsing
 
     // A Tree is how Git represents the state of the filesystem
@@ -206,40 +204,40 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     // object type in Git, but a useful structure for parsing and traversing
     // tree entries.
 
-    oid = nodegit.Oid.fromString("e1b0c7ea57bfc5e30ec279402a98168a27838ac9");
+    oid = nodegit.Oid.fromString('e1b0c7ea57bfc5e30ec279402a98168a27838ac9');
     return repo.getTree(oid);
   })
 
-  .then(function(tree) {
-    console.log("Tree Size:", tree.entryCount());
+  .then(function (tree) {
+    console.log('Tree Size:', tree.entryCount());
 
     function dfs(tree) {
       var promises = [];
 
-      tree.entries().forEach(function(entry) {
+      tree.entries().forEach(function (entry) {
         if (entry.isDirectory()) {
           promises.push(entry.getTree().then(dfs));
         } else if (entry.isFile()) {
-          console.log("Tree Entry:", entry.name());
+          console.log('Tree Entry:', entry.name());
         }
       });
 
       return Promise.all(promises);
     }
 
-    return dfs(tree).then(function() {
+    return dfs(tree).then(function () {
       // You can also access tree entries by path if you know the path of the
       // entry you're looking for.
-      return tree.getEntry("example/general.js").then(function(entry) {
+      return tree.getEntry('example/general.js').then(function (entry) {
         // Entries which are files have blobs associated with them:
-        entry.getBlob(function(error, blob) {
-          console.log("Blob size:", blob.size());
+        entry.getBlob(function (error, blob) {
+          console.log('Blob size:', blob.size());
         });
       });
     });
   })
 
-  .then(function() {
+  .then(function () {
     // #### Blob Parsing
 
     // The last object type is the simplest and requires the least parsing
@@ -250,22 +248,22 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     // from disk and writing it to the db and getting the oid back so you
     // don't have to do all those steps yourself.
 
-    oid = nodegit.Oid.fromString("991c06b7b1ec6f939488427e4b41a4fa3e1edd5f");
+    oid = nodegit.Oid.fromString('991c06b7b1ec6f939488427e4b41a4fa3e1edd5f');
     return repo.getBlob(oid);
   })
 
-  .then(function(blob) {
+  .then(function (blob) {
     // You can access a node.js Buffer with the raw contents
     // of the blob directly. Note that this buffer may not
     // contain ASCII data for certain blobs (e.g. binary files).
     var buffer = blob.content();
 
     // If you know that the blob is UTF-8, however,
-    console.log("Blob contents:", blob.toString().slice(0, 38));
-    console.log("Buffer:", buffer.toString().substring(100), "...");
+    console.log('Blob contents:', blob.toString().slice(0, 38));
+    console.log('Buffer:', buffer.toString().substring(100), '...');
   })
 
-  .then(function() {
+  .then(function () {
     // ### Revwalking
 
     // The libgit2 [revision walking api][rw] provides methods to traverse the
@@ -275,7 +273,7 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     // that were ancestors of (reachable from) a given starting point. This
     // can allow you to create `git log` type functionality.
 
-    oid = nodegit.Oid.fromString("698c74e817243efe441a5d1f3cbaf3998282ca86");
+    oid = nodegit.Oid.fromString('698c74e817243efe441a5d1f3cbaf3998282ca86');
 
     // To use the revwalker, create a new walker, tell it how you want to sort
     // the output and then push one or more starting points onto the walker.
@@ -287,8 +285,7 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     // of `branch1`.
     var revWalk = repo.createRevWalk();
 
-    revWalk.sorting(nodegit.Revwalk.SORT.TOPOLOGICAL,
-      nodegit.Revwalk.SORT.REVERSE);
+    revWalk.sorting(nodegit.Revwalk.SORT.TOPOLOGICAL, nodegit.Revwalk.SORT.REVERSE);
 
     revWalk.push(oid);
 
@@ -299,13 +296,13 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     // since the raw contents of the commit object will be cached in memory
 
     function walk() {
-      return revWalk.next().then(function(oid) {
+      return revWalk.next().then(function (oid) {
         if (!oid) {
           return;
         }
 
-        return repo.getCommit(oid).then(function(commit) {
-          console.log("Commit:", commit.toString());
+        return repo.getCommit(oid).then(function (commit) {
+          console.log('Commit:', commit.toString());
           return walk();
         });
       });
@@ -314,7 +311,7 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     return walk();
   })
 
-  .then(function() {
+  .then(function () {
     // ### Index File Manipulation
 
     // The [index file API][gi] allows you to read, traverse, update and write
@@ -322,7 +319,7 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     return repo.refreshIndex();
   })
 
-  .then(function(index) {
+  .then(function (index) {
     // For each entry in the index, you can get a bunch of information
     // including the SHA (oid), path and mode which map to the tree objects
     // that are written out. It also has filesystem properties to help
@@ -330,12 +327,12 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     // gid, file_size and flags) All these properties are exported publicly in
     // the `IndexEntry` class
 
-    index.entries().forEach(function(entry) {
-      console.log("Index Entry:", entry.path(), entry.mtime().seconds());
+    index.entries().forEach(function (entry) {
+      console.log('Index Entry:', entry.path(), entry.mtime().seconds());
     });
   })
 
-  .then(function() {
+  .then(function () {
     // ### References
 
     // The [reference API][ref] allows you to list, resolve, create and update
@@ -345,22 +342,24 @@ nodegit.Repository.open(path.resolve(__dirname, "../.git"))
     return repo.getReferenceNames(nodegit.Reference.TYPE.LISTALL);
   })
 
-  .then(function(referenceNames) {
+  .then(function (referenceNames) {
     var promises = [];
 
-    referenceNames.forEach(function(referenceName) {
-      promises.push(repo.getReference(referenceName).then(function(reference) {
-        if (reference.isConcrete()) {
-          console.log("Reference:", referenceName, reference.target());
-        } else if (reference.isSymbolic()) {
-          console.log("Reference:", referenceName, reference.symbolicTarget());
-        }
-      }));
+    referenceNames.forEach(function (referenceName) {
+      promises.push(
+        repo.getReference(referenceName).then(function (reference) {
+          if (reference.isConcrete()) {
+            console.log('Reference:', referenceName, reference.target());
+          } else if (reference.isSymbolic()) {
+            console.log('Reference:', referenceName, reference.symbolicTarget());
+          }
+        })
+      );
     });
 
     return Promise.all(promises);
   })
 
-  .done(function() {
-    console.log("Done!");
+  .done(function () {
+    console.log('Done!');
   });
