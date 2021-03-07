@@ -7,7 +7,9 @@ let Worker;
 
 try {
   Worker = require("worker_threads").Worker;
-} catch (e) {}
+} catch (e) {
+  // ignore
+}
 
 if (Worker) {
   describe("Worker", function() {

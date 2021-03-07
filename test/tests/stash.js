@@ -154,6 +154,7 @@ describe("Stash", function() {
 
       return fse.readFile(filePath)
         .then((content) => {
+          // eslint-disable-next-line no-unused-vars
           oldContent = content;
           return fse.writeFile(filePath, fileContent);
         })
@@ -186,6 +187,7 @@ describe("Stash", function() {
 
       return fse.readFile(filePath)
         .then((content) => {
+          // eslint-disable-next-line no-unused-vars
           oldContent = content;
           return fse.writeFile(filePath, fileContent);
         })

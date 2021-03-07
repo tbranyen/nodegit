@@ -11,7 +11,7 @@ var callbackDefs = require("../input/callbacks.json");
 var descriptor = require("../input/descriptor.json");
 var libgit2 = require("../input/libgit2-docs.json");
 
-var cTypes = libgit2.groups.map(function(group) { return group[0];});
+// var cTypes = libgit2.groups.map(function(group) { return group[0];});
 
 var cTypeMappings = {
   "char": "String",

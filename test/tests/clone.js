@@ -122,7 +122,7 @@ describe("Clone", function() {
 
     NodeGit.Libgit2.opts(NodeGit.Libgit2.OPT.SET_WINDOWS_LONGPATHS, 0);
 
-    return Clone(url, longClonePath, opts).then(function(repo) {
+    return Clone(url, longClonePath, opts).then(function(_repo) {
       assert.fail("Clone should not succeed");
     }).catch(function(error) {
       assert.ok(error instanceof Error);
@@ -136,7 +136,7 @@ describe("Clone", function() {
     var opts = {
       fetchOpts: {
         callbacks: {
-          transferProgress: function(progress) {
+          transferProgress: function(_progress) {
             progressCount++;
           }
         }
@@ -177,7 +177,7 @@ describe("Clone", function() {
     var opts = {
         fetchOpts: {
           callbacks: {
-            transferProgress: function(progress) {
+            transferProgress: function(_progress) {
               lastInvocation = updateProgressIntervals(progressIntervals,
                 lastInvocation);
               progressCount++;
@@ -215,7 +215,7 @@ describe("Clone", function() {
           callbacks: {
             transferProgress: {
               throttle: 50,
-              callback: function(progress) {
+              callback: function(_progress) {
                 lastInvocation = updateProgressIntervals(progressIntervals,
                   lastInvocation);
                 progressCount++;
@@ -403,6 +403,6 @@ describe("Clone", function() {
           }
         }
       }
-    }).catch(function(reason) { });
+    }).catch(function(_reason) { });
   });
 });
