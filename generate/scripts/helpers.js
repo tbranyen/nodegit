@@ -102,16 +102,11 @@ var Helpers = {
   },
 
   getLibgitType: function(normalizedType, types) {
-    var libgitType;
-
-    types.some(function (type) {
+    for (const type of types) {
       if (type[0] === normalizedType) {
-        libgitType = type[1];
-        return true;
+        return type[1];
       }
-    });
-
-    return libgitType;
+    }
   },
 
   processCallback: function(field) {
@@ -135,18 +130,12 @@ var Helpers = {
       field.isOptional = true;
     }
     else {
-      var cbFieldName;
-
-      allFields.some(function (cbField) {
+      for (const cbField of allFields) {
         if (Helpers.isPayloadFor(cbField, field.name)) {
-          cbFieldName = cbField.name;
-          return true;
+          field.payloadFor = cbField.name;
+          field.isOptional = true;
+          break;
         }
-      });
-
-      if (cbFieldName) {
-        field.payloadFor = cbFieldName;
-        field.isOptional = true;
       }
     }
   },
@@ -214,7 +203,6 @@ var Helpers = {
       return fnDef;
     });
 
-    var typeDefOverrides = descriptor.types[typeDef.typeName] || {};
     var functionOverrides = typeDefOverrides.functions || {};
     typeDef.functions.forEach(function(fnDef) {
       Helpers.decorateFunction(fnDef, typeDef, functionOverrides[fnDef.cFunctionName] || {}, enums);
@@ -224,7 +212,7 @@ var Helpers = {
   },
 
   decorateField: function(field, allFields, fieldOverrides, enums) {
-    var normalizeType = Helpers.normalizeCtype(field.type);
+    // var normalizeType = Helpers.normalizeCtype(field.type);
 
     field.cType = field.type;
     field.cppFunctionName = utils.titleCase(field.name);
