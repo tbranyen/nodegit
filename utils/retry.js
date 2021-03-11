@@ -14,13 +14,13 @@ const once = (fn) => {
 
     runOnce = true;
     fn(...args);
-  }
+  };
 };
 
 const retry = (numRetries = 3) => {
   const child = spawn(cmd, args, {
     shell: process.platform === 'win32',
-    stdio: [0, 'pipe', 'pipe']
+    stdio: [0, 'pipe', 'pipe'],
   });
 
   child.setMaxListeners(0);
@@ -42,7 +42,7 @@ const retry = (numRetries = 3) => {
       process.exit(status);
     }
   });
-  const onClose = status => cleanupAndExit(null, status);
+  const onClose = (status) => cleanupAndExit(null, status);
 
   child.on('close', onClose);
   child.on('error', cleanupAndExit);

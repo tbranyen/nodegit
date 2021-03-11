@@ -1,3 +1,3 @@
-module.exports = function(cType) {
-  return cType.replace(/\s*\*\s*$/, "");
+module.exports = function (cType) {
+  return cType.replace(/\s*\*\s*$/, '');
 };

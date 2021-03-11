@@ -1,3 +1,3 @@
-module.exports = function(field) {
-  return field.cppClassName == "String" && field.size;
+module.exports = function (field) {
+  return field.cppClassName == 'String' && field.size;
 };
